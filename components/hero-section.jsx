@@ -83,14 +83,16 @@ export function HeroSection() {
                 <Github className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/darrius-davidson-b9a63a24a/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-muted-foreground transition-colors hover:text-primary"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
-                href="mailto:hello@example.com"
+                href="mailto:ddavidson1230@gmail.com"
                 className="text-muted-foreground transition-colors hover:text-primary"
                 aria-label="Email"
               >
