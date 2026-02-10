@@ -110,7 +110,7 @@ export function HeroSection() {
             <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-2xl overflow-hidden border-2 border-border">
               <Image
                 src="/images/hero-portrait.jpg"
-                alt="Portrait photo"
+                alt="Darrius J. Davidson portrait"
                 fill
                 className="object-cover"
                 priority
