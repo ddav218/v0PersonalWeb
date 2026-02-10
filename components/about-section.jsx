@@ -29,20 +29,33 @@ const skills = [
   },
 ];
 
-const techStack = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Tailwind CSS",
-  "Node.js",
-  "PostgreSQL",
-  "Figma",
-  "Adobe Photoshop",
-  "Illustrator",
-  "After Effects",
-  "Git",
-  "Vercel",
+const programmingLanguages = [
+  { name: "Java", level: "Proficient" },
+  { name: "JavaScript", level: "Proficient" },
+  { name: "TypeScript", level: "Proficient" },
+  { name: "Python", level: "Proficient" },
+  { name: "HTML", level: "Intermediate" },
+  { name: "C#", level: "Intermediate" },
+  { name: "Unix/Linux", level: "Intermediate" },
+  { name: "C", level: "Intermediate" },
 ];
+
+const digitalMediaTools = [
+  { name: "Canva", level: "Proficient" },
+  { name: "Adobe Photoshop", level: "Intermediate" },
+  { name: "Adobe InDesign", level: "Intermediate" },
+  { name: "Microsoft Office", level: "Intermediate" },
+  { name: "SEO Optimization", level: "Basic" },
+  { name: "Figma", level: "Basic" },
+  { name: "Adobe Illustrator", level: "Basic" },
+  { name: "Premier Pro", level: "Basic" },
+];
+
+const levelColors = {
+  Proficient: "border-primary/60 text-primary",
+  Intermediate: "border-primary/30 text-muted-foreground",
+  Basic: "border-border text-muted-foreground/70",
+};
 
 export function AboutSection() {
   return (
@@ -84,18 +97,37 @@ export function AboutSection() {
               <span className="text-sm font-mono">ddavidson1230@gmail.com</span>
             </a>
 
-            {/* Tech stack */}
+            {/* Programming Languages */}
             <div className="pt-4">
               <p className="text-sm font-mono text-primary mb-4 tracking-wider uppercase">
-                Tech Stack
+                Programming Languages
               </p>
               <div className="flex flex-wrap gap-2">
-                {techStack.map((tech) => (
+                {programmingLanguages.map((item) => (
                   <span
-                    key={tech}
-                    className="rounded-md bg-secondary px-3 py-1.5 text-xs font-mono text-muted-foreground border border-border"
+                    key={item.name}
+                    className={`rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[item.level]}`}
                   >
-                    {tech}
+                    {item.name}
+                    <span className="ml-1.5 opacity-60">({item.level})</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Digital Media Tools */}
+            <div className="pt-2">
+              <p className="text-sm font-mono text-primary mb-4 tracking-wider uppercase">
+                Digital Media Tools
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {digitalMediaTools.map((item) => (
+                  <span
+                    key={item.name}
+                    className={`rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[item.level]}`}
+                  >
+                    {item.name}
+                    <span className="ml-1.5 opacity-60">({item.level})</span>
                   </span>
                 ))}
               </div>
