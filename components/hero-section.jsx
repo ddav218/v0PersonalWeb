@@ -107,19 +107,19 @@ export function HeroSection() {
 
           {/* Portrait */}
           <div className="relative flex justify-center lg:justify-end">
-            <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-2xl overflow-hidden border-2 border-border">
+            <div className="relative w-64 h-80 sm:w-72 sm:h-[22rem] lg:w-[22rem] lg:h-[28rem] rounded-2xl overflow-hidden border-2 border-border">
               <Image
                 src="/images/hero-portrait.jpg"
                 alt="Darrius J. Davidson portrait"
                 fill
-                className="object-cover"
+                className="object-cover object-top"
                 priority
               />
               {/* Gold accent overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
             </div>
             {/* Decorative border */}
-            <div className="absolute -bottom-3 -right-3 w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-2xl border-2 border-primary/30 -z-10" />
+            <div className="absolute -bottom-3 -right-3 w-64 h-80 sm:w-72 sm:h-[22rem] lg:w-[22rem] lg:h-[28rem] rounded-2xl border-2 border-primary/30 -z-10" />
           </div>
         </div>
       </div>
