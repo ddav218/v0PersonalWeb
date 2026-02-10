@@ -3,45 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-
-const graphics = [
-  {
-    title: "NPHC Promotional Flyer",
-    category: "National Panhellenic Council",
-    image: "/images/graphic-1.jpg",
-  },
-  {
-    title: "NPHC Event Branding",
-    category: "National Panhellenic Council",
-    image: "/images/graphic-2.jpg",
-  },
-  {
-    title: "Alpha Phi Alpha Chapter Graphics",
-    category: "Nu Psi Chapter of Alpha Phi Alpha Fraternity, Inc.",
-    image: "/images/graphic-3.jpg",
-  },
-  {
-    title: "Alpha Phi Alpha Event Poster",
-    category: "Nu Psi Chapter of Alpha Phi Alpha Fraternity, Inc.",
-    image: "/images/graphic-4.jpg",
-  },
-  {
-    title: "Student Government Campaign",
-    category: "LSU Student Government",
-    image: "/images/graphic-5.jpg",
-  },
-  {
-    title: "Freelance Brand Design",
-    category: "Freelance",
-    image: "/images/graphic-6.jpg",
-  },
-];
-
-const categories = ["All", ...Array.from(new Set(graphics.map((g) => g.category)))];
+import { useGraphics, GRAPHIC_CATEGORIES } from "@/hooks/use-portfolio-data";
 
 export function GraphicsSection() {
+  const { graphics } = useGraphics();
   const [activeCategory, setActiveCategory] = useState("All");
   const [lightboxImage, setLightboxImage] = useState(null);
+
+  const categories = ["All", ...GRAPHIC_CATEGORIES];
 
   const filteredGraphics =
     activeCategory === "All"
@@ -91,17 +60,25 @@ export function GraphicsSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredGraphics.map((graphic) => (
             <button
-              key={graphic.title}
+              key={graphic.id || graphic.title}
               type="button"
               onClick={() => setLightboxImage(graphic.image)}
               className="group relative rounded-xl overflow-hidden border border-border aspect-[4/3] cursor-pointer text-left"
             >
-              <Image
-                src={graphic.image || "/placeholder.svg"}
-                alt={graphic.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+              {graphic.image && graphic.image.startsWith("data:") ? (
+                <img
+                  src={graphic.image || "/placeholder.svg"}
+                  alt={graphic.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <Image
+                  src={graphic.image || "/placeholder.svg"}
+                  alt={graphic.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              )}
               {/* Overlay */}
               <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                 <span className="text-xs font-mono text-primary tracking-widest uppercase mb-1">
@@ -133,12 +110,20 @@ export function GraphicsSection() {
             <X className="h-8 w-8" />
           </button>
           <div className="relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden">
-            <Image
-              src={lightboxImage || "/placeholder.svg"}
-              alt="Enlarged graphic preview"
-              fill
-              className="object-contain"
-            />
+            {lightboxImage.startsWith("data:") ? (
+              <img
+                src={lightboxImage || "/placeholder.svg"}
+                alt="Enlarged graphic preview"
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <Image
+                src={lightboxImage || "/placeholder.svg"}
+                alt="Enlarged graphic preview"
+                fill
+                className="object-contain"
+              />
+            )}
           </div>
         </div>
       )}

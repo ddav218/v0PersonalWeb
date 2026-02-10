@@ -2,38 +2,11 @@
 
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
-
-const projects = [
-  {
-    title: "Analytics Dashboard",
-    description:
-      "A real-time data visualization dashboard built with React and D3.js. Features interactive charts, custom widgets, and a dark-themed interface.",
-    image: "/images/project-1.jpg",
-    tags: ["React", "TypeScript", "D3.js", "Tailwind CSS"],
-    liveUrl: "#",
-    repoUrl: "#",
-  },
-  {
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce application with product management, cart system, and payment integration. Optimized for mobile-first experiences.",
-    image: "/images/project-2.jpg",
-    tags: ["Next.js", "Node.js", "PostgreSQL", "Stripe"],
-    liveUrl: "#",
-    repoUrl: "#",
-  },
-  {
-    title: "Social Connect App",
-    description:
-      "A social networking platform with real-time messaging, user profiles, and content feeds. Built for scalability and performance.",
-    image: "/images/project-3.jpg",
-    tags: ["React", "Firebase", "WebSocket", "Material UI"],
-    liveUrl: "#",
-    repoUrl: "#",
-  },
-];
+import { useProjects } from "@/hooks/use-portfolio-data";
 
 export function ProjectsSection() {
+  const { projects } = useProjects();
+
   return (
     <section id="projects" className="py-24 lg:py-32 bg-secondary/30">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -59,7 +32,7 @@ export function ProjectsSection() {
         <div className="flex flex-col gap-16">
           {projects.map((project, index) => (
             <div
-              key={project.title}
+              key={project.id || project.title}
               className={`group grid lg:grid-cols-2 gap-8 items-center ${
                 index % 2 === 1 ? "lg:direction-rtl" : ""
               }`}
@@ -70,12 +43,20 @@ export function ProjectsSection() {
                   index % 2 === 1 ? "lg:order-2" : ""
                 }`}
               >
-                <Image
-                  src={project.image || "/placeholder.svg"}
-                  alt={`Screenshot of ${project.title}`}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+                {project.image && project.image.startsWith("data:") ? (
+                  <img
+                    src={project.image || "/placeholder.svg"}
+                    alt={`Screenshot of ${project.title}`}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <Image
+                    src={project.image || "/placeholder.svg"}
+                    alt={`Screenshot of ${project.title}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                )}
                 <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
@@ -101,34 +82,43 @@ export function ProjectsSection() {
                     index % 2 === 1 ? "lg:justify-end" : ""
                   }`}
                 >
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs font-mono text-muted-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  {project.tags &&
+                    project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs font-mono text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                 </div>
                 <div
                   className={`flex items-center gap-4 pt-2 ${
                     index % 2 === 1 ? "lg:justify-end" : ""
                   }`}
                 >
-                  <a
-                    href={project.repoUrl}
-                    className="text-muted-foreground transition-colors hover:text-primary"
-                    aria-label={`GitHub repository for ${project.title}`}
-                  >
-                    <Github className="h-5 w-5" />
-                  </a>
-                  <a
-                    href={project.liveUrl}
-                    className="text-muted-foreground transition-colors hover:text-primary"
-                    aria-label={`Live demo of ${project.title}`}
-                  >
-                    <ExternalLink className="h-5 w-5" />
-                  </a>
+                  {project.repoUrl && project.repoUrl !== "#" && (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground transition-colors hover:text-primary"
+                      aria-label={`GitHub repository for ${project.title}`}
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                  )}
+                  {project.liveUrl && project.liveUrl !== "#" && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground transition-colors hover:text-primary"
+                      aria-label={`Live demo of ${project.title}`}
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

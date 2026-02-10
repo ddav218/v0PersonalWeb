@@ -1,8 +1,9 @@
 "use client";
 
 import { Code, Palette, Globe, Zap, Mail } from "lucide-react";
+import { useSkills } from "@/hooks/use-portfolio-data";
 
-const skills = [
+const skillCards = [
   {
     icon: Code,
     title: "Frontend Development",
@@ -29,28 +30,6 @@ const skills = [
   },
 ];
 
-const programmingLanguages = [
-  { name: "Java", level: "Proficient" },
-  { name: "JavaScript", level: "Proficient" },
-  { name: "TypeScript", level: "Proficient" },
-  { name: "Python", level: "Proficient" },
-  { name: "HTML", level: "Intermediate" },
-  { name: "C#", level: "Intermediate" },
-  { name: "Unix/Linux", level: "Intermediate" },
-  { name: "C", level: "Intermediate" },
-];
-
-const digitalMediaTools = [
-  { name: "Canva", level: "Proficient" },
-  { name: "Adobe Photoshop", level: "Intermediate" },
-  { name: "Adobe InDesign", level: "Intermediate" },
-  { name: "Microsoft Office", level: "Intermediate" },
-  { name: "SEO Optimization", level: "Basic" },
-  { name: "Figma", level: "Basic" },
-  { name: "Adobe Illustrator", level: "Basic" },
-  { name: "Premier Pro", level: "Basic" },
-];
-
 const levelColors = {
   Proficient: "border-primary/60 text-primary",
   Intermediate: "border-primary/30 text-muted-foreground",
@@ -58,6 +37,8 @@ const levelColors = {
 };
 
 export function AboutSection() {
+  const { skills } = useSkills();
+
   return (
     <section id="about" className="py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -103,10 +84,10 @@ export function AboutSection() {
                 Programming Languages
               </p>
               <div className="flex flex-wrap gap-2">
-                {programmingLanguages.map((item) => (
+                {skills.programmingLanguages.map((item) => (
                   <span
                     key={item.name}
-                    className={`rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[item.level]}`}
+                    className={`rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[item.level] || ""}`}
                   >
                     {item.name}
                     <span className="ml-1.5 opacity-60">({item.level})</span>
@@ -121,10 +102,10 @@ export function AboutSection() {
                 Digital Media Tools
               </p>
               <div className="flex flex-wrap gap-2">
-                {digitalMediaTools.map((item) => (
+                {skills.digitalMediaTools.map((item) => (
                   <span
                     key={item.name}
-                    className={`rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[item.level]}`}
+                    className={`rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[item.level] || ""}`}
                   >
                     {item.name}
                     <span className="ml-1.5 opacity-60">({item.level})</span>
@@ -136,7 +117,7 @@ export function AboutSection() {
 
           {/* Right: Skill cards */}
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-            {skills.map((skill) => (
+            {skillCards.map((skill) => (
               <div
                 key={skill.title}
                 className="group rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:bg-secondary/50"
