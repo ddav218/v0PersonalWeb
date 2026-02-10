@@ -1,5 +1,3 @@
-import React from "react"
-import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
@@ -14,21 +12,17 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
 });
 
-export const metadata: Metadata = {
-  title: "Portfolio | Developer & Designer",
+export const metadata = {
+  title: "Darrius J. Davidson | Developer & Designer",
   description:
     "Personal portfolio showcasing coding projects, graphic design work, and creative development.",
 };
 
-export const viewport: Viewport = {
+export const viewport = {
   themeColor: "#0a0a0a",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="font-sans antialiased">{children}</body>

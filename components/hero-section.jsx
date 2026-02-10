@@ -5,7 +5,7 @@ import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 
 export function HeroSection() {
-  const headingRef = useRef<HTMLHeadingElement>(null);
+  const headingRef = useRef(null);
 
   useEffect(() => {
     const el = headingRef.current;
@@ -21,7 +21,7 @@ export function HeroSection() {
         className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage:
-            "linear-gradient(hsl(142 71% 45%) 1px, transparent 1px), linear-gradient(90deg, hsl(142 71% 45%) 1px, transparent 1px)",
+            "linear-gradient(hsl(43 74% 49%) 1px, transparent 1px), linear-gradient(90deg, hsl(43 74% 49%) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
@@ -109,7 +109,7 @@ export function HeroSection() {
                 className="object-cover"
                 priority
               />
-              {/* Green accent overlay */}
+              {/* Gold accent overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
             </div>
             {/* Decorative border */}

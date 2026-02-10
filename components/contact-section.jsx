@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { Send, MapPin, Mail, Phone, Loader2 } from "lucide-react";
 
 export function ContactSection() {
-  const [formState, setFormState] = useState<"idle" | "sending" | "sent">("idle");
+  const [formState, setFormState] = useState("idle");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setFormState("sending");
     // Simulate sending

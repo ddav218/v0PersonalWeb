@@ -37,7 +37,7 @@ export function Navbar() {
             className="font-mono text-lg font-bold tracking-tight text-foreground"
           >
             <span className="text-primary">{"{"}</span>
-            portfolio
+            Darrius J. Davidson
             <span className="text-primary">{"}"}</span>
           </a>
 

@@ -41,7 +41,7 @@ const categories = ["All", ...Array.from(new Set(graphics.map((g) => g.category)
 
 export function GraphicsSection() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const filteredGraphics =
     activeCategory === "All"
