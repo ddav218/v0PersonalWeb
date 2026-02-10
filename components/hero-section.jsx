@@ -76,7 +76,9 @@ export function HeroSection() {
 
             <div className="flex items-center gap-5 pt-6">
               <a
-                href="#"
+                href="https://github.com/ddav218"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-muted-foreground transition-colors hover:text-primary"
                 aria-label="GitHub"
               >
