@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -38,13 +38,7 @@ export function Footer() {
             >
               <Linkedin className="h-5 w-5" />
             </a>
-            <a
-              href="#"
-              className="text-muted-foreground transition-colors hover:text-primary"
-              aria-label="Twitter"
-            >
-              <Twitter className="h-5 w-5" />
-            </a>
+
             <a
               href="https://mail.google.com/mail/?view=cm&to=ddavidson1230@gmail.com"
               target="_blank"
@@ -57,7 +51,7 @@ export function Footer() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            {"© 2026 All rights reserved."}
+            {"© 2026 Darrius Davidson | All rights reserved."}
           </p>
         </div>
       </div>
