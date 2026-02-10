@@ -6,33 +6,33 @@ import { X } from "lucide-react";
 
 const graphics = [
   {
-    title: "Brand Identity System",
-    category: "Branding",
+    title: "NPHC Promotional Flyer",
+    category: "National Panhellenic Council",
     image: "/images/graphic-1.jpg",
   },
   {
-    title: "Event Poster Series",
-    category: "Print Design",
+    title: "NPHC Event Branding",
+    category: "National Panhellenic Council",
     image: "/images/graphic-2.jpg",
   },
   {
-    title: "Design System Components",
-    category: "UI/UX",
+    title: "Alpha Phi Alpha Chapter Graphics",
+    category: "Nu Psi Chapter of Alpha Phi Alpha Fraternity, Inc.",
     image: "/images/graphic-3.jpg",
   },
   {
-    title: "Social Media Campaign",
-    category: "Digital Marketing",
+    title: "Alpha Phi Alpha Event Poster",
+    category: "Nu Psi Chapter of Alpha Phi Alpha Fraternity, Inc.",
     image: "/images/graphic-4.jpg",
   },
   {
-    title: "Product Packaging",
-    category: "Packaging",
+    title: "Student Government Campaign",
+    category: "LSU Student Government",
     image: "/images/graphic-5.jpg",
   },
   {
-    title: "Digital Illustration",
-    category: "Art Direction",
+    title: "Freelance Brand Design",
+    category: "Freelance",
     image: "/images/graphic-6.jpg",
   },
 ];
@@ -64,8 +64,8 @@ export function GraphicsSection() {
             Visual creations
           </h3>
           <p className="text-muted-foreground max-w-md">
-            A curated collection of graphic design work spanning branding, UI
-            design, and digital art.
+            A curated collection of graphic design work across organizations
+            and freelance projects.
           </p>
         </div>
 
