@@ -48,10 +48,10 @@ export function ContactSection() {
               <div>
                 <p className="font-semibold text-foreground text-sm">Email</p>
                 <a
-                  href="mailto:hello@example.com"
+                  href="mailto:ddavidson1230@gmail.com"
                   className="text-muted-foreground text-sm hover:text-primary transition-colors"
                 >
-                  hello@example.com
+                  ddavidson1230@gmail.com
                 </a>
               </div>
             </div>
@@ -63,10 +63,10 @@ export function ContactSection() {
               <div>
                 <p className="font-semibold text-foreground text-sm">Phone</p>
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+13185412414"
                   className="text-muted-foreground text-sm hover:text-primary transition-colors"
                 >
-                  +1 (234) 567-890
+                  (318) 541-2414
                 </a>
               </div>
             </div>
@@ -78,7 +78,7 @@ export function ContactSection() {
               <div>
                 <p className="font-semibold text-foreground text-sm">Location</p>
                 <p className="text-muted-foreground text-sm">
-                  Available for remote work worldwide
+                  Alexandria, LA | Baton Rouge, LA
                 </p>
               </div>
             </div>
