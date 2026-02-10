@@ -48,7 +48,9 @@ export function ContactSection() {
               <div>
                 <p className="font-semibold text-foreground text-sm">Email</p>
                 <a
-                  href="mailto:ddavidson1230@gmail.com"
+                  href="https://mail.google.com/mail/?view=cm&to=ddavidson1230@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground text-sm hover:text-primary transition-colors"
                 >
                   ddavidson1230@gmail.com

@@ -46,7 +46,9 @@ export function Footer() {
               <Twitter className="h-5 w-5" />
             </a>
             <a
-              href="mailto:ddavidson1230@gmail.com"
+              href="https://mail.google.com/mail/?view=cm&to=ddavidson1230@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground transition-colors hover:text-primary"
               aria-label="Email"
             >

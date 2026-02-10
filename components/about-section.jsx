@@ -1,6 +1,6 @@
 "use client";
 
-import { Code, Palette, Globe, Zap } from "lucide-react";
+import { Code, Palette, Globe, Zap, Mail } from "lucide-react";
 
 const skills = [
   {
@@ -72,6 +72,17 @@ export function AboutSection() {
                 "Whether it's architecting a scalable frontend, designing a brand identity, or building a full-stack application from scratch, I'm driven by the challenge of creating something meaningful and visually compelling."
               }
             </p>
+
+            {/* Email link */}
+            <a
+              href="https://mail.google.com/mail/?view=cm&to=ddavidson1230@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary hover:opacity-80 transition-opacity w-fit"
+            >
+              <Mail className="h-4 w-4" />
+              <span className="text-sm font-mono">ddavidson1230@gmail.com</span>
+            </a>
 
             {/* Tech stack */}
             <div className="pt-4">
