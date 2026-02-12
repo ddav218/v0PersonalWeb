@@ -170,18 +170,31 @@ export function useSkills() {
     });
   }, []);
 
-  const removeSkill = useCallback((category, name) => {
+  const removeSkill = useCallback((category, skillName) => {
     setSkills((prev) => {
       const updated = {
         ...prev,
-        [category]: prev[category].filter((s) => s.name !== name),
+        [category]: prev[category].filter((s) => s.name !== skillName),
       };
       setStored(STORAGE_KEYS.skills, updated);
       return updated;
     });
   }, []);
 
-  return { skills, addSkill, removeSkill };
+  const updateSkill = useCallback((category, oldName, newData) => {
+    setSkills((prev) => {
+      const updated = {
+        ...prev,
+        [category]: prev[category].map((s) =>
+          s.name === oldName ? { ...s, ...newData } : s
+        ),
+      };
+      setStored(STORAGE_KEYS.skills, updated);
+      return updated;
+    });
+  }, []);
+
+  return { skills, addSkill, removeSkill, updateSkill };
 }
 
 export function useGraphics() {
