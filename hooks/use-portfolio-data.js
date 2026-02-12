@@ -133,6 +133,14 @@ export function useProjects() {
     });
   }, []);
 
+  const updateProject = useCallback((id, data) => {
+    setProjects((prev) => {
+      const updated = prev.map((p) => (p.id === id ? { ...p, ...data } : p));
+      setStored(STORAGE_KEYS.projects, updated);
+      return updated;
+    });
+  }, []);
+
   const removeProject = useCallback((id) => {
     setProjects((prev) => {
       const updated = prev.filter((p) => p.id !== id);
@@ -141,7 +149,7 @@ export function useProjects() {
     });
   }, []);
 
-  return { projects, addProject, removeProject };
+  return { projects, addProject, updateProject, removeProject };
 }
 
 export function useSkills() {
