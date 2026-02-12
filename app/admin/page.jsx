@@ -421,10 +421,13 @@ function ProjectsManager() {
 
 /* ===================== SKILLS MANAGER ===================== */
 function SkillsManager() {
-  const { skills, addSkill, removeSkill } = useSkills();
+  const { skills, addSkill, removeSkill, updateSkill } = useSkills();
   const [category, setCategory] = useState("programmingLanguages");
   const [name, setName] = useState("");
   const [level, setLevel] = useState("Intermediate");
+  const [editingSkill, setEditingSkill] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editLevel, setEditLevel] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -432,6 +435,24 @@ function SkillsManager() {
     addSkill(category, { name: name.trim(), level });
     setName("");
     setLevel("Intermediate");
+  }
+
+  function startEdit(skill) {
+    setEditingSkill(skill.name);
+    setEditName(skill.name);
+    setEditLevel(skill.level);
+  }
+
+  function saveEdit(oldName) {
+    if (!editName.trim()) return;
+    updateSkill(category, oldName, { name: editName.trim(), level: editLevel });
+    setEditingSkill(null);
+  }
+
+  function cancelEdit() {
+    setEditingSkill(null);
+    setEditName("");
+    setEditLevel("");
   }
 
   const categoryLabel =
@@ -458,7 +479,7 @@ function SkillsManager() {
       <div className="flex gap-2">
         <button
           type="button"
-          onClick={() => setCategory("programmingLanguages")}
+          onClick={() => { setCategory("programmingLanguages"); cancelEdit(); }}
           className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
             category === "programmingLanguages"
               ? "bg-primary text-primary-foreground"
@@ -469,7 +490,7 @@ function SkillsManager() {
         </button>
         <button
           type="button"
-          onClick={() => setCategory("digitalMediaTools")}
+          onClick={() => { setCategory("digitalMediaTools"); cancelEdit(); }}
           className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
             category === "digitalMediaTools"
               ? "bg-primary text-primary-foreground"
@@ -530,23 +551,75 @@ function SkillsManager() {
         <h3 className="text-sm font-mono text-primary tracking-wider uppercase mb-4">
           {categoryLabel}
         </h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-2">
           {skills[category].map((skill) => (
-            <span
+            <div
               key={skill.name}
-              className={`group flex items-center gap-2 rounded-md bg-secondary px-3 py-1.5 text-xs font-mono border ${levelColors[skill.level]}`}
+              className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
             >
-              {skill.name}
-              <span className="opacity-60">({skill.level})</span>
-              <button
-                type="button"
-                onClick={() => removeSkill(category, skill.name)}
-                className="opacity-0 group-hover:opacity-100 text-destructive transition-opacity"
-                aria-label={`Remove ${skill.name}`}
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
+              {editingSkill === skill.name ? (
+                <div className="flex flex-1 items-center gap-3">
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="rounded-md border border-border bg-secondary px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary flex-1"
+                  />
+                  <select
+                    value={editLevel}
+                    onChange={(e) => setEditLevel(e.target.value)}
+                    className="rounded-md border border-border bg-secondary px-3 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="Proficient">Proficient</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Basic">Basic</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => saveEdit(skill.name)}
+                    className="rounded-md p-1.5 text-primary hover:bg-primary/10 transition-colors"
+                    aria-label="Save"
+                  >
+                    <Check className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary transition-colors"
+                    aria-label="Cancel"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-sm font-mono ${levelColors[skill.level] || "text-foreground"}`}>
+                      {skill.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">({skill.level})</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(skill)}
+                      className="rounded-md p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      aria-label={`Edit ${skill.name}`}
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeSkill(category, skill.name)}
+                      className="rounded-md p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      aria-label={`Remove ${skill.name}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -563,6 +636,7 @@ function GraphicsManager() {
   const [imageUrl, setImageUrl] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [portfolioLink, setPortfolioLink] = useState("");
 
   function handleFileChange(e) {
     const file = e.target.files[0];
@@ -583,12 +657,14 @@ function GraphicsManager() {
       title: title.trim(),
       category,
       image: finalImage,
+      link: portfolioLink.trim() || "",
     });
     setTitle("");
     setCategory(GRAPHIC_CATEGORIES[0]);
     setImageUrl("");
     setImageFile(null);
     setImagePreview("");
+    setPortfolioLink("");
     setShowForm(false);
   }
 
@@ -688,6 +764,20 @@ function GraphicsManager() {
                 />
               </div>
             )}
+          </div>
+
+          {/* Portfolio link */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
+              Portfolio Link (optional)
+            </label>
+            <input
+              type="url"
+              value={portfolioLink}
+              onChange={(e) => setPortfolioLink(e.target.value)}
+              placeholder="https://behance.net/... or https://dribbble.com/..."
+              className="rounded-lg border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
           </div>
 
           <button
