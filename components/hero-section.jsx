@@ -43,19 +43,11 @@ export function HeroSection() {
               ref={headingRef}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-foreground opacity-0"
             >
-              I code
-              <span className="text-primary"> cool </span>
-              websites
-              <br />
-              <span className="text-muted-foreground text-3xl sm:text-4xl lg:text-5xl">
-                {"& design stunning visuals"}
-              </span>
+
             </h1>
 
             <p className="max-w-lg text-muted-foreground leading-relaxed text-lg">
-              A creative developer and designer who builds modern web
-              experiences and crafts compelling visual identities. Turning ideas
-              into polished digital products.
+              This space showcases my work at the intersection of software engineerting, digital design, and creative problem-solving being built with clarity, a purpose, and detailed intentions.
             </p>
 
             <div className="flex items-center gap-4 pt-4">
