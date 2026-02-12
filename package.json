@@ -2,7 +2,7 @@
   "name": "my-project",
   "version": "0.1.0",
   "private": true,
-
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c5f2b56c2f62d35d17b44f6970971556ac185d5c5eb039f0596b2992cc9c70b6c40b2dd3a4a6fa2bb",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
@@ -68,8 +68,10 @@
     "tailwindcss": "^3.4.17",
     "typescript": "5.7.3"
   },
-  "overrides": {
-    "@types/react": "19.2.7",
-    "@types/react-dom": "19.2.3"
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }
