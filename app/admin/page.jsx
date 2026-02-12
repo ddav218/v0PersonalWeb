@@ -12,6 +12,8 @@ import {
   ImageIcon,
   FolderOpen,
   X,
+  Pencil,
+  Check,
 } from "lucide-react";
 import {
   useProjects,
@@ -147,36 +149,72 @@ function AdminDashboard({ onLogout }) {
 
 /* ===================== PROJECTS MANAGER ===================== */
 function ProjectsManager() {
-  const { projects, addProject, removeProject } = useProjects();
+  const { projects, addProject, updateProject, removeProject } = useProjects();
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
   const [liveUrl, setLiveUrl] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+
+  function resetForm() {
+    setTitle("");
+    setDescription("");
+    setTags("");
+    setLiveUrl("");
+    setRepoUrl("");
+    setImagePreview("");
+    setImageFile(null);
+    setEditingId(null);
+    setShowForm(false);
+  }
+
+  function handleEdit(project) {
+    setTitle(project.title);
+    setDescription(project.description);
+    setTags(project.tags ? project.tags.join(", ") : "");
+    setLiveUrl(project.liveUrl || "");
+    setRepoUrl(project.repoUrl || "");
+    setImagePreview(project.image || "");
+    setImageFile(null);
+    setEditingId(project.id);
+    setShowForm(true);
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
-    addProject({
+    const projectData = {
       title: title.trim(),
       description: description.trim(),
-      image: imageUrl.trim() || "/images/project-1.jpg",
+      image: imagePreview || "/images/project-1.jpg",
       tags: tags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
       liveUrl: liveUrl.trim() || "#",
       repoUrl: repoUrl.trim() || "#",
-    });
-    setTitle("");
-    setDescription("");
-    setTags("");
-    setLiveUrl("");
-    setRepoUrl("");
-    setImageUrl("");
-    setShowForm(false);
+    };
+    if (editingId) {
+      updateProject(editingId, projectData);
+    } else {
+      addProject(projectData);
+    }
+    resetForm();
   }
 
   return (
@@ -190,7 +228,13 @@ function ProjectsManager() {
         </div>
         <button
           type="button"
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => {
+            if (showForm) {
+              resetForm();
+            } else {
+              setShowForm(true);
+            }
+          }}
           className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
         >
           {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -198,12 +242,15 @@ function ProjectsManager() {
         </button>
       </div>
 
-      {/* Add form */}
+      {/* Add / Edit form */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
           className="rounded-xl border border-border bg-card p-6 flex flex-col gap-4"
         >
+          <p className="text-xs font-mono text-primary uppercase tracking-wider">
+            {editingId ? "Edit Project" : "New Project"}
+          </p>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
@@ -244,19 +291,36 @@ function ProjectsManager() {
               className="rounded-lg border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
           </div>
-          <div className="grid sm:grid-cols-3 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
-                Image URL
+
+          {/* Cover image upload */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
+              Cover Image
+            </label>
+            <div className="flex items-start gap-4">
+              <label className="flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-secondary px-4 py-6 text-sm text-muted-foreground hover:border-primary/50 hover:text-foreground transition-colors cursor-pointer">
+                <Upload className="h-4 w-4" />
+                {imageFile ? imageFile.name : "Upload cover image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
               </label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="rounded-lg border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+              {imagePreview && (
+                <div className="w-28 h-20 rounded-lg overflow-hidden border border-border flex-shrink-0">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
             </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
                 Live URL
@@ -284,9 +348,10 @@ function ProjectsManager() {
           </div>
           <button
             type="submit"
-            className="self-end rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+            className="self-end flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
           >
-            Save Project
+            {editingId ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            {editingId ? "Update Project" : "Save Project"}
           </button>
         </form>
       )}
@@ -298,34 +363,55 @@ function ProjectsManager() {
             key={project.id}
             className="flex items-center justify-between rounded-xl border border-border bg-card p-4"
           >
-            <div className="flex flex-col gap-1">
-              <h3 className="font-semibold text-foreground text-sm">
-                {project.title}
-              </h3>
-              <p className="text-xs text-muted-foreground line-clamp-1">
-                {project.description}
-              </p>
-              {project.tags && project.tags.length > 0 && (
-                <div className="flex gap-1.5 pt-1">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-mono text-primary/70 bg-primary/10 rounded px-1.5 py-0.5"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+              {project.image && (
+                <div className="w-16 h-12 rounded-lg overflow-hidden border border-border flex-shrink-0">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               )}
+              <div className="flex flex-col gap-1 min-w-0">
+                <h3 className="font-semibold text-foreground text-sm">
+                  {project.title}
+                </h3>
+                <p className="text-xs text-muted-foreground line-clamp-1">
+                  {project.description}
+                </p>
+                {project.tags && project.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-mono text-primary/70 bg-primary/10 rounded px-1.5 py-0.5"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={() => removeProject(project.id)}
-              className="rounded-lg p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-              aria-label={`Delete ${project.title}`}
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+              <button
+                type="button"
+                onClick={() => handleEdit(project)}
+                className="rounded-lg p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                aria-label={`Edit ${project.title}`}
+              >
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => removeProject(project.id)}
+                className="rounded-lg p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                aria-label={`Delete ${project.title}`}
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         ))}
       </div>

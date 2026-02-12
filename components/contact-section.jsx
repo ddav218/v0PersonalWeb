@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, MapPin, Mail, Phone, Loader2 } from "lucide-react";
+import { Send, MapPin, Mail, Phone, Loader2, FileDown } from "lucide-react";
 
 export function ContactSection() {
   const [formState, setFormState] = useState("idle");
@@ -41,6 +41,27 @@ export function ContactSection() {
         <div className="grid lg:grid-cols-5 gap-12">
           {/* Contact info */}
           <div className="lg:col-span-2 flex flex-col gap-8">
+            {/* Resume download */}
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <FileDown className="h-5 w-5 text-primary" />
+                <span className="text-sm font-semibold text-foreground">
+                  Resume
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+                Download my latest resume for a full overview of my experience, skills, and education.
+              </p>
+              <a
+                href="/DarriusJ_Davidson_Resume.pdf"
+                download="DarriusJ_Davidson_Resume.pdf"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+              >
+                <FileDown className="h-4 w-4" />
+                Download Resume
+              </a>
+            </div>
+
             <div className="flex items-start gap-4">
               <div className="rounded-lg bg-primary/10 p-3 text-primary">
                 <Mail className="h-5 w-5" />

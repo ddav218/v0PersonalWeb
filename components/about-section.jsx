@@ -54,16 +54,16 @@ export function AboutSection() {
           {/* Left: Bio */}
           <div className="lg:col-span-3 flex flex-col gap-6">
             <h3 className="text-3xl sm:text-4xl font-bold text-foreground text-balance">
-              Developer by trade. Designer by passion.
+              Built with intention. Defined by Precision.
             </h3>
             <p className="text-muted-foreground leading-relaxed text-lg">
               {
-                "I'm a multidisciplinary creative who thrives at the intersection of code and design. With years of experience building web applications and crafting visual content, I bring a unique perspective to every project."
+                "I'm a senior at LSU majoring in Computer Science with a concentration in software engineering and minoring in Digital Media Arts & Engineering in Technology."
               }
             </p>
             <p className="text-muted-foreground leading-relaxed">
               {
-                "Whether it's architecting a scalable frontend, designing a brand identity, or building a full-stack application from scratch, I'm driven by the challenge of creating something meaningful and visually compelling."
+                "Whether i'm developing full-stack applications, architecting intuitive frontends, or refining visual identity, my work is driven through clarity, usuability, and intentional design as I enjoy turning complex ideas into simple and effective digital experiences that balance technical strength with thoughtful visuals. "
               }
             </p>
 
