@@ -58,12 +58,12 @@ export function AboutSection() {
             </h3>
             <p className="text-muted-foreground leading-relaxed text-lg">
               {
-                "I'm a multidisciplinary creative who thrives at the intersection of code and design. With years of experience building web applications and crafting visual content, I bring a unique perspective to every project."
+                "I'm a senior at LSU majoring in Computer Science with a concentration in software engineering and minoring in Digital Media Arts & Engineering in Technology."
               }
             </p>
             <p className="text-muted-foreground leading-relaxed">
               {
-                "Whether it's architecting a scalable frontend, designing a brand identity, or building a full-stack application from scratch, I'm driven by the challenge of creating something meaningful and visually compelling."
+                "Whether i'm developing full-stack applications, architecting intuitive frontends, or refining visual identity, my work is driven through clarity, usuability, and intentional design as I enjoy turning complex ideas into simple and effective digital experiences that balance technical strength with thoughtful visuals. "
               }
             </p>
 
