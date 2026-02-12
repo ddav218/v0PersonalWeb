@@ -54,7 +54,7 @@ export function AboutSection() {
           {/* Left: Bio */}
           <div className="lg:col-span-3 flex flex-col gap-6">
             <h3 className="text-3xl sm:text-4xl font-bold text-foreground text-balance">
-              Developer by trade. Designer by passion.
+              Built with intention. Defined by Precision.
             </h3>
             <p className="text-muted-foreground leading-relaxed text-lg">
               {
