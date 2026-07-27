@@ -6,14 +6,18 @@ import {
   ArrowLeft,
   BadgeCheck,
   BrainCircuit,
+  Github,
   Layers,
-  ShieldCheck,
+  Linkedin,
+  Mail,
+  Route,
   Workflow,
 } from "lucide-react";
 import { useCredentials, useSkillGraph } from "@/hooks/use-portfolio-data";
 import { SkillGraph } from "./skill-graph";
 import { CredentialsExplorer } from "./credentials-explorer";
 import { LearningTimeline } from "./learning-timeline";
+import { IbmContact } from "./ibm-contact";
 
 function Stat({ icon: Icon, value, label }) {
   return (
@@ -36,13 +40,16 @@ export function IbmExperience() {
   const stats = useMemo(() => {
     const providers = new Set(credentials.map((c) => c.provider).filter(Boolean));
     const skills = new Set();
-    credentials.forEach((c) => (c.skills || []).forEach((s) => skills.add(s)));
-    const verified = credentials.filter((c) => c.verified).length;
+    const paths = new Set();
+    credentials.forEach((c) => {
+      (c.skills || []).forEach((s) => skills.add(s));
+      (c.tags || []).forEach((t) => paths.add(t));
+    });
     return {
       total: credentials.length,
       providers: providers.size,
       skills: skills.size,
-      verified,
+      paths: paths.size,
     };
   }, [credentials]);
 
@@ -106,34 +113,33 @@ export function IbmExperience() {
                   Darrius J. Davidson
                 </h1>
                 <p className="text-lg font-semibold text-primary md:text-xl">
-                  Oracle Middleware Developer — Integrations
+                  Oracle Middleware Developer specializing in enterprise
+                  integrations
                 </p>
               </div>
               <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-                {summary}
+                {
+                  "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems. I focus on integration architecture, API management, and middleware that keeps complex enterprise platforms in sync, and I stay continuously credentialed across integration, cloud, and professional leadership disciplines."
+                }
               </p>
             </div>
           </div>
+        </section>
 
+        {/* Professional summary */}
+        <section className="mt-14">
+          <div className="mb-6 flex flex-col gap-1">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              Professional Summary
+            </h2>
+            <p className="text-sm text-muted-foreground">{summary}</p>
+          </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat icon={Layers} value={stats.total} label="Credentials" />
             <Stat icon={Workflow} value={stats.providers} label="Providers" />
             <Stat icon={BrainCircuit} value={stats.skills} label="Skills mapped" />
-            <Stat icon={ShieldCheck} value={stats.verified} label="Verified" />
+            <Stat icon={Route} value={stats.paths} label="Learning paths" />
           </div>
-        </section>
-
-        {/* AI Skill Graph */}
-        <section className="mt-16">
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              AI Skill Graph
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Automatically synthesized from every earned badge and certification.
-            </p>
-          </div>
-          <SkillGraph credentials={credentials} graph={graph} />
         </section>
 
         {/* Credentials explorer */}
@@ -170,6 +176,19 @@ export function IbmExperience() {
           )}
         </section>
 
+        {/* AI Skill Graph */}
+        <section className="mt-16">
+          <div className="mb-6 flex flex-col gap-1">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              AI Skill Graph
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Automatically synthesized from every earned badge and certification.
+            </p>
+          </div>
+          <SkillGraph credentials={credentials} graph={graph} />
+        </section>
+
         {/* Learning timeline */}
         {credentials.length > 0 && (
           <section className="mt-16">
@@ -178,9 +197,61 @@ export function IbmExperience() {
         )}
       </main>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-6 py-8 text-center text-sm text-muted-foreground">
-          Credentials discovered, verified, and organized by an AI agent.
+      {/* Contact — "Let's work together" */}
+      <IbmContact />
+
+      {/* Footer (same format as main site, IBM theme) */}
+      <footer className="border-t border-border py-12">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+            <div className="flex flex-col items-center gap-2 sm:items-start">
+              <Link
+                href="/ibm"
+                className="font-mono text-lg font-bold tracking-tight text-foreground"
+              >
+                <span className="text-primary">{"{"}</span>
+                Darrius J. Davidson
+                <span className="text-primary">{"}"}</span>
+              </Link>
+              <p className="text-xs text-muted-foreground">
+                {"Built with Next.js & Tailwind CSS"}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-5">
+              <a
+                href="https://github.com/ddav218"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors hover:text-primary"
+                aria-label="GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/darrius-davidson-b9a63a24a/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors hover:text-primary"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a
+                href="https://mail.google.com/mail/?view=cm&to=ddavidson03@ibm.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors hover:text-primary"
+                aria-label="Email"
+              >
+                <Mail className="h-5 w-5" />
+              </a>
+            </div>
+
+            <p className="text-xs text-muted-foreground">
+              {"© 2026 Darrius Davidson | All rights reserved."}
+            </p>
+          </div>
         </div>
       </footer>
     </div>

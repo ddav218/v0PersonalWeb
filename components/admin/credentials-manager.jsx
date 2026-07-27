@@ -13,6 +13,7 @@ import {
   BrainCircuit,
   Wand2,
   Save,
+  FileText,
 } from "lucide-react";
 import {
   useCredentials,
@@ -69,11 +70,38 @@ export function CredentialsManager() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeMsg, setAnalyzeMsg] = useState("");
 
+  // Resume upload state
+  const [resumeName, setResumeName] = useState("");
+  const [resumeMsg, setResumeMsg] = useState("");
+  const [savingResume, setSavingResume] = useState(false);
+
   useEffect(() => {
     if (settings?.credly_username !== undefined) {
       setCredlyUser(settings.credly_username || "");
     }
   }, [settings?.credly_username]);
+
+  useEffect(() => {
+    if (settings?.resume_name !== undefined) {
+      setResumeName(settings.resume_name || "");
+    }
+  }, [settings?.resume_name]);
+
+  async function handleResumeUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSavingResume(true);
+    setResumeMsg("");
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      await updateSetting("resume_url", reader.result);
+      await updateSetting("resume_name", file.name);
+      setResumeName(file.name);
+      setSavingResume(false);
+      setResumeMsg("Resume/CV uploaded.");
+    };
+    reader.readAsDataURL(file);
+  }
 
   function set(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -367,6 +395,40 @@ export function CredentialsManager() {
           </button>
           {analyzeMsg && <p className="text-xs text-muted-foreground">{analyzeMsg}</p>}
         </div>
+      </div>
+
+      {/* ===================== RESUME / CV ===================== */}
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5">
+        <div className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold text-foreground">Resume / CV</h3>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Upload the PDF used by the &quot;Download Resume/CV&quot; button on the{" "}
+          <span className="font-mono text-primary">/ibm</span> contact section.
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity">
+            {savingResume ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <FileText className="h-3.5 w-3.5" />
+            )}
+            {savingResume ? "Uploading..." : "Upload Resume/CV"}
+            <input
+              type="file"
+              accept="application/pdf,.pdf,.doc,.docx"
+              onChange={handleResumeUpload}
+              className="hidden"
+            />
+          </label>
+          {resumeName && (
+            <span className="text-xs text-muted-foreground">
+              Current: <span className="text-foreground">{resumeName}</span>
+            </span>
+          )}
+        </div>
+        {resumeMsg && <p className="text-xs text-muted-foreground">{resumeMsg}</p>}
       </div>
 
       {/* ===================== ADD / EDIT FORM ===================== */}
