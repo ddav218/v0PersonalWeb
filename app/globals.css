@@ -100,3 +100,22 @@ html {
 .ibm-theme ::selection {
   background-color: hsl(217 91% 60% / 0.3);
 }
+
+/* ===================== ADMIN THEME (scoped) =====================
+   Remaps the site's gold accent to white on the admin dashboard only,
+   without changing the rest of the portfolio's branding. */
+.admin-theme {
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 4%;
+  --accent: 0 0% 98%;
+  --accent-foreground: 0 0% 4%;
+  --ring: 0 0% 98%;
+  --chart-1: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 0 0% 4%;
+  --sidebar-ring: 0 0% 98%;
+}
+
+.admin-theme ::selection {
+  background-color: hsl(0 0% 98% / 0.25);
+}

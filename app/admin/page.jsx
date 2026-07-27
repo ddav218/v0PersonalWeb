@@ -33,7 +33,7 @@ export default function AdminPage() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <div className="admin-theme min-h-screen bg-background flex items-center justify-center px-6">
         <div className="w-full max-w-sm">
           <div className="rounded-2xl border border-border bg-card p-8 flex flex-col gap-6">
             <div className="flex flex-col items-center gap-3">
@@ -81,7 +81,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="admin-theme min-h-screen bg-background">
       <AdminDashboard onLogout={() => setAuthenticated(false)} />
     </div>
   );
