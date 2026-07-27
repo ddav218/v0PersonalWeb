@@ -94,7 +94,7 @@ function AdminDashboard({ onLogout }) {
     { id: "projects", label: "Projects", icon: Code },
     { id: "skills", label: "Skills", icon: Palette },
     { id: "graphics", label: "Graphics", icon: ImageIcon },
-    { id: "credentials", label: "Credentials", icon: Award },
+    { id: "credentials", label: "IBM", icon: Award },
   ];
 
   return (

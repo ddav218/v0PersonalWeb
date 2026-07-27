@@ -54,6 +54,7 @@ export function CredentialsManager() {
     removeCredential,
     discoverFromCredly,
     discoverFromOracle,
+    importOracleLink,
   } = useCredentials();
   const { settings, updateSetting } = useSettings();
   const { graph, regenerate } = useSkillGraph();
@@ -70,6 +71,10 @@ export function CredentialsManager() {
   const [oracleUser, setOracleUser] = useState("");
   const [oracleDiscovering, setOracleDiscovering] = useState(false);
   const [oracleMsg, setOracleMsg] = useState("");
+  // Oracle single-link import state
+  const [oracleLink, setOracleLink] = useState("");
+  const [oracleLinkImporting, setOracleLinkImporting] = useState(false);
+  const [oracleLinkMsg, setOracleLinkMsg] = useState("");
   const [pasteText, setPasteText] = useState("");
   const [pasteProvider, setPasteProvider] = useState("Oracle University");
   const [parsing, setParsing] = useState(false);
@@ -241,6 +246,20 @@ export function CredentialsManager() {
       setOracleMsg(
         `Imported ${result.imported} Oracle credential(s) from @${result.username}.`
       );
+    }
+  }
+
+  async function handleImportOracleLink() {
+    if (!oracleLink.trim()) return;
+    setOracleLinkImporting(true);
+    setOracleLinkMsg("");
+    const result = await importOracleLink(oracleLink.trim());
+    setOracleLinkImporting(false);
+    if (result?.error) {
+      setOracleLinkMsg(result.error);
+    } else {
+      setOracleLinkMsg(`Imported "${result.credential?.title}".`);
+      setOracleLink("");
     }
   }
 
@@ -417,6 +436,39 @@ export function CredentialsManager() {
           {oracleMsg && (
             <p className="text-xs text-muted-foreground">{oracleMsg}</p>
           )}
+
+          {/* Import a single Oracle credential by link */}
+          <div className="mt-1 border-t border-border pt-3">
+            <p className="text-xs text-muted-foreground">
+              Or paste a single Oracle credential link (Oracle CertView or Credly
+              badge URL) to implement that digital badge directly.
+            </p>
+            <div className="mt-2 flex gap-2">
+              <input
+                type="text"
+                value={oracleLink}
+                onChange={(e) => setOracleLink(e.target.value)}
+                placeholder="https://www.credly.com/badges/... or Oracle link"
+                className={inputCls}
+              />
+              <button
+                type="button"
+                onClick={handleImportOracleLink}
+                disabled={oracleLinkImporting || !oracleLink.trim()}
+                className="flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60"
+              >
+                {oracleLinkImporting ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Download className="h-3.5 w-3.5" />
+                )}
+                {oracleLinkImporting ? "Reading..." : "Import Link"}
+              </button>
+            </div>
+            {oracleLinkMsg && (
+              <p className="mt-2 text-xs text-muted-foreground">{oracleLinkMsg}</p>
+            )}
+          </div>
         </div>
 
         {/* AI import */}
