@@ -113,8 +113,7 @@ export function IbmExperience() {
                   Darrius J. Davidson
                 </h1>
                 <p className="text-lg font-semibold text-primary md:text-xl">
-                  Oracle Middleware Developer specializing in enterprise
-                  integrations
+                  Oracle Applications Operations: Integration Specialist
                 </p>
               </div>
               <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
