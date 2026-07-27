@@ -14,6 +14,7 @@ import {
   X,
   Pencil,
   Check,
+  Award,
 } from "lucide-react";
 import {
   useProjects,
@@ -21,6 +22,7 @@ import {
   useGraphics,
   GRAPHIC_CATEGORIES,
 } from "@/hooks/use-portfolio-data";
+import { CredentialsManager } from "@/components/admin/credentials-manager";
 
 const ADMIN_PASSWORD = "D@V!D$0N";
 
@@ -92,6 +94,7 @@ function AdminDashboard({ onLogout }) {
     { id: "projects", label: "Projects", icon: Code },
     { id: "skills", label: "Skills", icon: Palette },
     { id: "graphics", label: "Graphics", icon: ImageIcon },
+    { id: "credentials", label: "Credentials", icon: Award },
   ];
 
   return (
@@ -142,6 +145,7 @@ function AdminDashboard({ onLogout }) {
         {activeTab === "projects" && <ProjectsManager />}
         {activeTab === "skills" && <SkillsManager />}
         {activeTab === "graphics" && <GraphicsManager />}
+        {activeTab === "credentials" && <CredentialsManager />}
       </div>
     </>
   );

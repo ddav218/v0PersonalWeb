@@ -137,3 +137,126 @@ export const GRAPHIC_CATEGORIES = [
   "LSU Student Government",
   "Freelance",
 ];
+
+/* ===================== CREDENTIALS ===================== */
+export const CREDENTIAL_PROVIDERS = [
+  "Credly",
+  "IBM SkillsBuild",
+  "Oracle University",
+  "Udemy",
+  "Harvard Manage Mentor",
+  "Other",
+];
+
+export const CREDENTIAL_LEVELS = [
+  "Foundational",
+  "Intermediate",
+  "Advanced",
+  "Specialist",
+];
+
+export function useCredentials() {
+  const { data, error, isLoading, mutate } = useSWR("/api/credentials", fetcher);
+
+  const credentials = Array.isArray(data) ? data : [];
+
+  const addCredential = useCallback(
+    async (credential) => {
+      const res = await fetch("/api/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credential),
+      });
+      const created = await res.json();
+      mutate();
+      return created;
+    },
+    [mutate]
+  );
+
+  const updateCredential = useCallback(
+    async (id, credential) => {
+      await fetch("/api/credentials", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...credential }),
+      });
+      mutate();
+    },
+    [mutate]
+  );
+
+  const removeCredential = useCallback(
+    async (id) => {
+      await fetch(`/api/credentials?id=${id}`, { method: "DELETE" });
+      mutate(
+        credentials.filter((c) => c.id !== id),
+        { revalidate: true }
+      );
+    },
+    [credentials, mutate]
+  );
+
+  const discoverFromCredly = useCallback(
+    async (username) => {
+      const res = await fetch("/api/credentials/discover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
+      const result = await res.json();
+      mutate();
+      return result;
+    },
+    [mutate]
+  );
+
+  return {
+    credentials,
+    addCredential,
+    updateCredential,
+    removeCredential,
+    discoverFromCredly,
+    isLoading,
+    error,
+    refresh: mutate,
+  };
+}
+
+export function useSettings() {
+  const { data, error, isLoading, mutate } = useSWR("/api/settings", fetcher);
+
+  const settings = data || {};
+
+  const updateSetting = useCallback(
+    async (key, value) => {
+      await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value }),
+      });
+      mutate();
+    },
+    [mutate]
+  );
+
+  return { settings, updateSetting, isLoading, error };
+}
+
+export function useSkillGraph() {
+  const { data, error, isLoading, mutate } = useSWR(
+    "/api/credentials/skill-graph",
+    fetcher
+  );
+
+  const graph = data || { summary: "", domains: [], generatedAt: null };
+
+  const regenerate = useCallback(async () => {
+    const res = await fetch("/api/credentials/skill-graph", { method: "POST" });
+    const result = await res.json();
+    mutate();
+    return result;
+  }, [mutate]);
+
+  return { graph, regenerate, isLoading, error };
+}

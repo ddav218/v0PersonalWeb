@@ -62,3 +62,41 @@ html {
 ::selection {
   background-color: hsl(43 74% 49% / 0.3);
 }
+
+/* ===================== IBM THEME (scoped) =====================
+   White background with royal blue + grey. Applied by wrapping the
+   /ibm page in a .ibm-theme container so all token-based shadcn
+   components adopt these colors automatically. */
+.ibm-theme {
+  --background: 0 0% 100%;
+  --foreground: 215 28% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 215 28% 17%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 215 28% 17%;
+  --primary: 224 76% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 20% 96%;
+  --secondary-foreground: 215 28% 17%;
+  --muted: 210 20% 96%;
+  --muted-foreground: 215 16% 42%;
+  --accent: 224 76% 48%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 20% 88%;
+  --input: 214 20% 88%;
+  --ring: 224 76% 48%;
+  --chart-1: 224 76% 48%;
+  --chart-2: 215 16% 47%;
+  --chart-3: 224 64% 33%;
+  --chart-4: 210 16% 66%;
+  --chart-5: 224 82% 66%;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.ibm-theme ::selection {
+  background-color: hsl(224 76% 48% / 0.2);
+}
