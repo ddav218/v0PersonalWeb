@@ -56,12 +56,19 @@ export function IbmExperience() {
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-              <Workflow className="h-4 w-4 text-primary-foreground" />
+            <img
+              src="/images/darrius-davidson.png"
+              alt="Darrius J. Davidson"
+              className="h-8 w-8 rounded-full object-cover object-top ring-1 ring-border"
+            />
+            <div className="flex flex-col leading-tight">
+              <span className="text-sm font-semibold tracking-tight text-foreground">
+                Darrius J. Davidson
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                Credential Intelligence
+              </span>
             </div>
-            <span className="font-semibold tracking-tight text-foreground">
-              Credential Intelligence
-            </span>
           </div>
           <Link
             href="/"
@@ -75,19 +82,37 @@ export function IbmExperience() {
 
       <main className="mx-auto max-w-6xl px-6 py-12">
         {/* Hero / professional summary */}
-        <section className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              AI-verified digital credentials
-            </span>
-            <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-              Oracle Middleware Developer
-              <span className="block text-primary">focused on Integrations</span>
-            </h1>
-            <p className="max-w-3xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-              {summary}
-            </p>
+        <section className="flex flex-col gap-8">
+          <div className="grid items-center gap-8 md:grid-cols-[220px_1fr]">
+            {/* Photo */}
+            <div className="mx-auto w-full max-w-[220px]">
+              <div className="relative overflow-hidden rounded-2xl border border-border bg-secondary shadow-sm">
+                <img
+                  src="/images/darrius-davidson.png"
+                  alt="Portrait of Darrius J. Davidson"
+                  className="aspect-square w-full object-cover object-top"
+                />
+              </div>
+            </div>
+
+            {/* Intro */}
+            <div className="flex flex-col gap-4">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
+                <BadgeCheck className="h-3.5 w-3.5" />
+                AI-verified digital credentials
+              </span>
+              <div className="flex flex-col gap-1">
+                <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+                  Darrius J. Davidson
+                </h1>
+                <p className="text-lg font-semibold text-primary md:text-xl">
+                  Oracle Middleware Developer — Integrations
+                </p>
+              </div>
+              <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
+                {summary}
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
