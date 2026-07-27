@@ -62,3 +62,60 @@ html {
 ::selection {
   background-color: hsl(43 74% 49% / 0.3);
 }
+
+/* ===================== IBM THEME (scoped) =====================
+   Dark background with royal blue + grey colorway. Applied by wrapping
+   the /ibm page in a .ibm-theme container so all token-based shadcn
+   components adopt these colors automatically. */
+.ibm-theme {
+  --background: 220 26% 8%;
+  --foreground: 210 20% 92%;
+  --card: 220 24% 11%;
+  --card-foreground: 210 20% 92%;
+  --popover: 220 24% 11%;
+  --popover-foreground: 210 20% 92%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 220 26% 8%;
+  --secondary: 220 20% 15%;
+  --secondary-foreground: 210 20% 92%;
+  --muted: 220 20% 15%;
+  --muted-foreground: 215 16% 62%;
+  --accent: 217 91% 60%;
+  --accent-foreground: 220 26% 8%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 18% 20%;
+  --input: 220 18% 20%;
+  --ring: 217 91% 60%;
+  --chart-1: 217 91% 60%;
+  --chart-2: 215 16% 60%;
+  --chart-3: 224 76% 48%;
+  --chart-4: 215 14% 40%;
+  --chart-5: 213 94% 74%;
+
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.ibm-theme ::selection {
+  background-color: hsl(217 91% 60% / 0.3);
+}
+
+/* ===================== ADMIN THEME (scoped) =====================
+   Remaps the site's gold accent to white on the admin dashboard only,
+   without changing the rest of the portfolio's branding. */
+.admin-theme {
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 4%;
+  --accent: 0 0% 98%;
+  --accent-foreground: 0 0% 4%;
+  --ring: 0 0% 98%;
+  --chart-1: 0 0% 98%;
+  --sidebar-primary: 0 0% 98%;
+  --sidebar-primary-foreground: 0 0% 4%;
+  --sidebar-ring: 0 0% 98%;
+}
+
+.admin-theme ::selection {
+  background-color: hsl(0 0% 98% / 0.25);
+}

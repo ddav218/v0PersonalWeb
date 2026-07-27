@@ -14,6 +14,7 @@ import {
   X,
   Pencil,
   Check,
+  Award,
 } from "lucide-react";
 import {
   useProjects,
@@ -21,6 +22,7 @@ import {
   useGraphics,
   GRAPHIC_CATEGORIES,
 } from "@/hooks/use-portfolio-data";
+import { CredentialsManager } from "@/components/admin/credentials-manager";
 
 const ADMIN_PASSWORD = "D@V!D$0N";
 
@@ -31,7 +33,7 @@ export default function AdminPage() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <div className="admin-theme min-h-screen bg-background flex items-center justify-center px-6">
         <div className="w-full max-w-sm">
           <div className="rounded-2xl border border-border bg-card p-8 flex flex-col gap-6">
             <div className="flex flex-col items-center gap-3">
@@ -79,7 +81,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="admin-theme min-h-screen bg-background">
       <AdminDashboard onLogout={() => setAuthenticated(false)} />
     </div>
   );
@@ -92,6 +94,7 @@ function AdminDashboard({ onLogout }) {
     { id: "projects", label: "Projects", icon: Code },
     { id: "skills", label: "Skills", icon: Palette },
     { id: "graphics", label: "Graphics", icon: ImageIcon },
+    { id: "credentials", label: "Credentials", icon: Award },
   ];
 
   return (
@@ -142,6 +145,7 @@ function AdminDashboard({ onLogout }) {
         {activeTab === "projects" && <ProjectsManager />}
         {activeTab === "skills" && <SkillsManager />}
         {activeTab === "graphics" && <GraphicsManager />}
+        {activeTab === "credentials" && <CredentialsManager />}
       </div>
     </>
   );
