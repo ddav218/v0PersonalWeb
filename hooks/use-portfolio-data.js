@@ -225,6 +225,20 @@ export function useCredentials() {
     [mutate]
   );
 
+  const importOracleLink = useCallback(
+    async (url) => {
+      const res = await fetch("/api/credentials/discover/oracle-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const result = await res.json();
+      mutate();
+      return result;
+    },
+    [mutate]
+  );
+
   return {
     credentials,
     addCredential,
@@ -232,6 +246,7 @@ export function useCredentials() {
     removeCredential,
     discoverFromCredly,
     discoverFromOracle,
+    importOracleLink,
     isLoading,
     error,
     refresh: mutate,
