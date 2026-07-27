@@ -211,12 +211,27 @@ export function useCredentials() {
     [mutate]
   );
 
+  const discoverFromOracle = useCallback(
+    async (username) => {
+      const res = await fetch("/api/credentials/discover/oracle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
+      const result = await res.json();
+      mutate();
+      return result;
+    },
+    [mutate]
+  );
+
   return {
     credentials,
     addCredential,
     updateCredential,
     removeCredential,
     discoverFromCredly,
+    discoverFromOracle,
     isLoading,
     error,
     refresh: mutate,

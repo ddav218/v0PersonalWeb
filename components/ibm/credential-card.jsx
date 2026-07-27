@@ -33,7 +33,7 @@ export function CredentialCard({ credential, onClick }) {
               src={credential.badgeImage || "/placeholder.svg"}
               alt={`${credential.title} badge`}
               className="h-full w-full object-contain"
-              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
             />
           ) : (
             <Award className="h-7 w-7 text-primary" />

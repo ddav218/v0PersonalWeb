@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-// Pulls a public Credly profile's badges and upserts them as credentials.
-// Credly exposes a public JSON endpoint for public profiles.
+// Oracle digital badges are issued through Credly. This route pulls a public
+// Credly profile and imports ONLY Oracle-issued badges, labeling them as
+// "Oracle University" credentials.
 function pickIssuer(item) {
   try {
     const entities = item?.issuer?.entities;
@@ -29,7 +30,15 @@ export async function POST(request) {
     username = (body.username || "").trim();
   } catch {}
 
-  // Fall back to the stored setting
+  // Fall back to the Oracle-specific setting, then the shared Credly one
+  if (!username) {
+    const { data: oracleSetting } = await supabase
+      .from("app_settings")
+      .select("value")
+      .eq("key", "oracle_credly_username")
+      .maybeSingle();
+    username = (oracleSetting?.value || "").trim();
+  }
   if (!username) {
     const { data: setting } = await supabase
       .from("app_settings")
@@ -39,13 +48,12 @@ export async function POST(request) {
     username = (setting?.value || "").trim();
   }
 
-  // Accept a full URL or a bare username
   const match = username.match(/credly\.com\/users\/([^/?#]+)/i);
   if (match) username = match[1];
 
   if (!username) {
     return NextResponse.json(
-      { error: "No Credly username configured. Add it in the admin Credentials settings." },
+      { error: "No Credly username configured. Add it in the Oracle Auto-Discovery settings." },
       { status: 400 }
     );
   }
@@ -77,24 +85,27 @@ export async function POST(request) {
   const results = [];
   for (const item of badges) {
     const t = item?.badge_template || {};
-    const issuer = pickIssuer(item) || "Credly";
-    // Oracle-issued badges are handled by the Oracle Auto-Discovery route
-    if (issuer.toLowerCase().includes("oracle")) continue;
+    const issuer = pickIssuer(item) || "";
+    // Only import Oracle-issued badges
+    if (!issuer.toLowerCase().includes("oracle")) continue;
+
     const credentialId = item?.id || t?.id || "";
     const row = {
       title: t?.name || "Untitled Badge",
-      issuer,
-      provider: "Credly",
+      issuer: issuer || "Oracle",
+      provider: "Oracle University",
       issue_date: item?.issued_at_date || item?.issued_at || null,
       expiration_date: item?.expires_at_date || item?.expires_at || null,
       credential_id: credentialId,
-      verification_url: credentialId ? `https://www.credly.com/badges/${credentialId}` : (t?.url || ""),
+      verification_url: credentialId
+        ? `https://www.credly.com/badges/${credentialId}`
+        : t?.url || "",
       badge_image: t?.image_url || t?.image?.url || "",
       skills: Array.isArray(t?.skills) ? t.skills.map((s) => s.name).filter(Boolean) : [],
       level: levelFromTemplate(t),
-      tags: ["Credly"],
+      tags: ["Oracle", "Oracle University"],
       description: (t?.description || "").replace(/<[^>]*>/g, "").trim(),
-      source: "credly",
+      source: "oracle",
       verified: true,
     };
     const { error } = await supabase
