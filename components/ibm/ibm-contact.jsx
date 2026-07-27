@@ -11,6 +11,31 @@ export function IbmContact() {
   const resumeUrl = settings?.resume_url || "";
   const resumeName = settings?.resume_name || "DarriusJ_Davidson_Resume.pdf";
 
+  const statusKey = settings?.availability_status || "available";
+  const statusConfig = {
+    available: {
+      label: "Available for hire",
+      defaultDesc:
+        "Currently open to full-time, freelance, and contract opportunities. Let's chat about your next project.",
+      dot: "bg-green-500",
+      pulse: true,
+    },
+    staffed: {
+      label: "Currently staffed on a project",
+      defaultDesc: "Actively engaged on a client project.",
+      dot: "bg-amber-500",
+      pulse: false,
+    },
+    bench: {
+      label: "Currently on the bench",
+      defaultDesc: "Between engagements and sharpening a new credential.",
+      dot: "bg-primary",
+      pulse: true,
+    },
+  };
+  const status = statusConfig[statusKey] || statusConfig.available;
+  const statusDesc = settings?.availability_description || status.defaultDesc;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormState("sending");
@@ -120,17 +145,21 @@ export function IbmContact() {
             <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-5">
               <div className="mb-2 flex items-center gap-3">
                 <span className="relative flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
+                  {status.pulse && (
+                    <span
+                      className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${status.dot}`}
+                    />
+                  )}
+                  <span
+                    className={`relative inline-flex h-3 w-3 rounded-full ${status.dot}`}
+                  />
                 </span>
                 <span className="text-sm font-semibold text-foreground">
-                  Available for hire
+                  {status.label}
                 </span>
               </div>
               <p className="text-xs leading-relaxed text-muted-foreground">
-                {
-                  "Currently open to full-time, freelance, and contract opportunities. Let's chat about your next project."
-                }
+                {statusDesc}
               </p>
             </div>
           </div>

@@ -14,6 +14,7 @@ import {
   Wand2,
   Save,
   FileText,
+  Activity,
 } from "lucide-react";
 import {
   useCredentials,
@@ -75,11 +76,38 @@ export function CredentialsManager() {
   const [resumeMsg, setResumeMsg] = useState("");
   const [savingResume, setSavingResume] = useState(false);
 
+  // Availability status state
+  const [availStatus, setAvailStatus] = useState("available");
+  const [availDesc, setAvailDesc] = useState("");
+  const [savingAvail, setSavingAvail] = useState(false);
+  const [availMsg, setAvailMsg] = useState("");
+
   useEffect(() => {
     if (settings?.credly_username !== undefined) {
       setCredlyUser(settings.credly_username || "");
     }
   }, [settings?.credly_username]);
+
+  useEffect(() => {
+    if (settings?.availability_status !== undefined) {
+      setAvailStatus(settings.availability_status || "available");
+    }
+  }, [settings?.availability_status]);
+
+  useEffect(() => {
+    if (settings?.availability_description !== undefined) {
+      setAvailDesc(settings.availability_description || "");
+    }
+  }, [settings?.availability_description]);
+
+  async function handleSaveAvailability() {
+    setSavingAvail(true);
+    setAvailMsg("");
+    await updateSetting("availability_status", availStatus);
+    await updateSetting("availability_description", availDesc);
+    setSavingAvail(false);
+    setAvailMsg("Availability status saved.");
+  }
 
   useEffect(() => {
     if (settings?.resume_name !== undefined) {
@@ -429,6 +457,98 @@ export function CredentialsManager() {
           )}
         </div>
         {resumeMsg && <p className="text-xs text-muted-foreground">{resumeMsg}</p>}
+      </div>
+
+      {/* ===================== AVAILABILITY STATUS ===================== */}
+      <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5">
+        <div className="flex items-center gap-2">
+          <Activity className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold text-foreground">
+            Availability Status
+          </h3>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Controls the status badge shown on the{" "}
+          <span className="font-mono text-primary">/ibm</span> contact section.
+        </p>
+
+        <div className="grid gap-2 sm:grid-cols-3">
+          {[
+            {
+              value: "available",
+              label: "Available for hire",
+              hint: "Open to opportunities",
+            },
+            {
+              value: "staffed",
+              label: "Staffed on a project",
+              hint: "Add a project description",
+            },
+            {
+              value: "bench",
+              label: "On the bench",
+              hint: "Add a credential in progress",
+            },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setAvailStatus(opt.value)}
+              className={`flex flex-col gap-1 rounded-lg border p-3 text-left transition-colors ${
+                availStatus === opt.value
+                  ? "border-primary bg-primary/10"
+                  : "border-border bg-secondary/40 hover:border-primary/40"
+              }`}
+            >
+              <span className="text-xs font-semibold text-foreground">
+                {opt.label}
+              </span>
+              <span className="text-[11px] text-muted-foreground">{opt.hint}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className={labelCls}>
+            {availStatus === "staffed"
+              ? "Project description"
+              : availStatus === "bench"
+              ? "Credential in progress"
+              : "Description"}
+          </label>
+          <textarea
+            value={availDesc}
+            onChange={(e) => setAvailDesc(e.target.value)}
+            rows={3}
+            placeholder={
+              availStatus === "staffed"
+                ? "e.g. Leading an OIC integration rollout for an enterprise finance client."
+                : availStatus === "bench"
+                ? "e.g. Currently pursuing the Oracle Cloud Infrastructure Integration Professional certification."
+                : "e.g. Open to full-time, freelance, and contract integration work."
+            }
+            className={inputCls}
+          />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleSaveAvailability}
+            disabled={savingAvail}
+            className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60"
+          >
+            {savingAvail ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Save className="h-3.5 w-3.5" />
+            )}
+            {savingAvail ? "Saving..." : "Save Status"}
+          </button>
+          {availMsg && (
+            <span className="text-xs text-muted-foreground">{availMsg}</span>
+          )}
+        </div>
       </div>
 
       {/* ===================== ADD / EDIT FORM ===================== */}
