@@ -61,7 +61,7 @@ export function CredentialDialog({ credential, open, onOpenChange }) {
                   src={credential.badgeImage || "/placeholder.svg"}
                   alt={`${credential.title} badge`}
                   className="h-full w-full object-contain"
-                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <Award className="h-12 w-12 text-primary" />

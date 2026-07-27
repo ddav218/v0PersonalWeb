@@ -15,6 +15,7 @@ import {
   Save,
   FileText,
   Activity,
+  GraduationCap,
 } from "lucide-react";
 import {
   useCredentials,
@@ -52,6 +53,7 @@ export function CredentialsManager() {
     updateCredential,
     removeCredential,
     discoverFromCredly,
+    discoverFromOracle,
   } = useCredentials();
   const { settings, updateSetting } = useSettings();
   const { graph, regenerate } = useSkillGraph();
@@ -64,6 +66,10 @@ export function CredentialsManager() {
   const [credlyUser, setCredlyUser] = useState("");
   const [discovering, setDiscovering] = useState(false);
   const [discoverMsg, setDiscoverMsg] = useState("");
+  // Oracle discovery state
+  const [oracleUser, setOracleUser] = useState("");
+  const [oracleDiscovering, setOracleDiscovering] = useState(false);
+  const [oracleMsg, setOracleMsg] = useState("");
   const [pasteText, setPasteText] = useState("");
   const [pasteProvider, setPasteProvider] = useState("Oracle University");
   const [parsing, setParsing] = useState(false);
@@ -87,6 +93,12 @@ export function CredentialsManager() {
       setCredlyUser(settings.credly_username || "");
     }
   }, [settings?.credly_username]);
+
+  useEffect(() => {
+    if (settings?.oracle_credly_username !== undefined) {
+      setOracleUser(settings.oracle_credly_username || "");
+    }
+  }, [settings?.oracle_credly_username]);
 
   useEffect(() => {
     if (settings?.availability_status !== undefined) {
@@ -212,6 +224,26 @@ export function CredentialsManager() {
     }
   }
 
+  async function handleSaveOracle() {
+    await updateSetting("oracle_credly_username", oracleUser.trim());
+    setOracleMsg("Oracle profile saved.");
+  }
+
+  async function handleDiscoverOracle() {
+    setOracleDiscovering(true);
+    setOracleMsg("");
+    await updateSetting("oracle_credly_username", oracleUser.trim());
+    const result = await discoverFromOracle(oracleUser.trim());
+    setOracleDiscovering(false);
+    if (result?.error) {
+      setOracleMsg(result.error);
+    } else {
+      setOracleMsg(
+        `Imported ${result.imported} Oracle credential(s) from @${result.username}.`
+      );
+    }
+  }
+
   async function handleParse() {
     if (!pasteText.trim()) return;
     setParsing(true);
@@ -296,7 +328,7 @@ export function CredentialsManager() {
       </div>
 
       {/* ===================== AI AGENT TOOLS ===================== */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         {/* Credly discovery */}
         <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5">
           <div className="flex items-center gap-2">
@@ -305,6 +337,7 @@ export function CredentialsManager() {
           </div>
           <p className="text-xs text-muted-foreground">
             Automatically pull and verify public badges from your Credly profile.
+            Oracle-issued badges are handled by Oracle Auto-Discovery.
           </p>
           <input
             type="text"
@@ -338,6 +371,51 @@ export function CredentialsManager() {
           </div>
           {discoverMsg && (
             <p className="text-xs text-muted-foreground">{discoverMsg}</p>
+          )}
+        </div>
+
+        {/* Oracle discovery */}
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground">Oracle Auto-Discovery</h3>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Pull Oracle University certifications and badges. Oracle issues its badges
+            through Credly, so enter the profile hosting your Oracle badges.
+          </p>
+          <input
+            type="text"
+            value={oracleUser}
+            onChange={(e) => setOracleUser(e.target.value)}
+            placeholder="Credly username or profile URL"
+            className={inputCls}
+          />
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleSaveOracle}
+              className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-xs font-medium text-foreground hover:border-primary/50 transition-colors"
+            >
+              <Save className="h-3.5 w-3.5" />
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={handleDiscoverOracle}
+              disabled={oracleDiscovering}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60"
+            >
+              {oracleDiscovering ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <GraduationCap className="h-3.5 w-3.5" />
+              )}
+              {oracleDiscovering ? "Discovering..." : "Discover"}
+            </button>
+          </div>
+          {oracleMsg && (
+            <p className="text-xs text-muted-foreground">{oracleMsg}</p>
           )}
         </div>
 
