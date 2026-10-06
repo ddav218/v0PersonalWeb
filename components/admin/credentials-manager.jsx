@@ -326,9 +326,28 @@ export function CredentialsManager() {
     reader.readAsDataURL(file);
   }
 
+  const saveIbmProfile = async (event) => {
+    event.preventDefault();
+    await Promise.all([
+      updateSetting("ibm_profile_headline", event.currentTarget.headline.value),
+      updateSetting("ibm_profile_intro", event.currentTarget.intro.value),
+      updateSetting("ibm_values", event.currentTarget.values.value),
+    ]);
+  };
+
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
+  <div className="flex flex-col gap-8">
+  <form onSubmit={saveIbmProfile} className="rounded-xl border border-border bg-card p-5">
+    <div className="mb-4"><h2 className="text-lg font-semibold text-foreground">IBM profile editor</h2><p className="text-sm text-muted-foreground">Customize the headline, intro, and Values section shown under your name.</p></div>
+    <div className="grid gap-4 md:grid-cols-2">
+      <label className={labelCls}>Headline<input name="headline" defaultValue={settings?.ibm_profile_headline || "Oracle Applications Operations: Integration Specialist"} className={inputCls} /></label>
+      <label className={labelCls}>Values<textarea name="values" defaultValue={settings?.ibm_values || "Clarity in complexity, ownership in delivery, and continuous learning through measurable outcomes."} className={`${inputCls} min-h-24`} /></label>
+      <label className={`${labelCls} md:col-span-2`}>Intro<textarea name="intro" defaultValue={settings?.ibm_profile_intro || "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems."} className={`${inputCls} min-h-24`} /></label>
+    </div>
+    <button type="submit" className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">Save IBM profile</button>
+  </form>
+  <div className="flex flex-col gap-8">
+  <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-foreground">Digital Credentials</h2>
           <p className="text-sm text-muted-foreground">
@@ -942,6 +961,7 @@ export function CredentialsManager() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

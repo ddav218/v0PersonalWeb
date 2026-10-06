@@ -152,6 +152,8 @@ function AdminDashboard({ onLogout }) {
 }
 
 /* ===================== PROJECTS MANAGER ===================== */
+const PROJECT_TYPES = ["billable", "non-billable"];
+
 function ProjectsManager() {
   const { projects, addProject, updateProject, removeProject } = useProjects();
   const [showForm, setShowForm] = useState(false);
@@ -163,11 +165,13 @@ function ProjectsManager() {
   const [repoUrl, setRepoUrl] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [projectType, setProjectType] = useState("");
 
   function resetForm() {
     setTitle("");
     setDescription("");
     setTags("");
+    setProjectType("");
     setLiveUrl("");
     setRepoUrl("");
     setImagePreview("");
@@ -179,7 +183,10 @@ function ProjectsManager() {
   function handleEdit(project) {
     setTitle(project.title);
     setDescription(project.description);
-    setTags(project.tags ? project.tags.join(", ") : "");
+    const projectTags = Array.isArray(project.tags) ? project.tags : [];
+    const typeTag = projectTags.find((t) => PROJECT_TYPES.includes(t.toLowerCase()));
+    setProjectType(typeTag ? typeTag.toLowerCase() : "");
+    setTags(projectTags.filter((t) => !PROJECT_TYPES.includes(t.toLowerCase())).join(", "));
     setLiveUrl(project.liveUrl || "");
     setRepoUrl(project.repoUrl || "");
     setImagePreview(project.image || "");
@@ -206,10 +213,13 @@ function ProjectsManager() {
       title: title.trim(),
       description: description.trim(),
       image: imagePreview || "/images/project-1.jpg",
-      tags: tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
+      tags: [
+        ...tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter((t) => t && !PROJECT_TYPES.includes(t.toLowerCase())),
+        ...(projectType ? [projectType] : []),
+      ],
       liveUrl: liveUrl.trim() || "#",
       repoUrl: repoUrl.trim() || "#",
     };
@@ -281,6 +291,24 @@ function ProjectsManager() {
                 className="rounded-lg border border-border bg-secondary px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="project-type"
+              className="text-xs font-mono text-muted-foreground uppercase tracking-wider"
+            >
+              IBM Clients &amp; Projects category
+            </label>
+            <select
+              id="project-type"
+              value={projectType}
+              onChange={(e) => setProjectType(e.target.value)}
+              className="rounded-lg border border-border bg-secondary px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="">Not shown on IBM page</option>
+              <option value="billable">Billable</option>
+              <option value="non-billable">Non-billable</option>
+            </select>
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-mono text-muted-foreground uppercase tracking-wider">

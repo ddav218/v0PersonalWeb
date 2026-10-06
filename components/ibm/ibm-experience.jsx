@@ -13,11 +13,12 @@ import {
   Route,
   Workflow,
 } from "lucide-react";
-import { useCredentials, useSkillGraph } from "@/hooks/use-portfolio-data";
+import { useCredentials, useSkillGraph, useSettings } from "@/hooks/use-portfolio-data";
 import { SkillGraph } from "./skill-graph";
 import { CredentialsExplorer } from "./credentials-explorer";
 import { LearningTimeline } from "./learning-timeline";
 import { IbmContact } from "./ibm-contact";
+import { IbmProjects } from "./ibm-projects";
 
 function Stat({ icon: Icon, value, label }) {
   return (
@@ -36,6 +37,7 @@ function Stat({ icon: Icon, value, label }) {
 export function IbmExperience() {
   const { credentials, isLoading } = useCredentials();
   const { graph } = useSkillGraph();
+  const { settings } = useSettings();
 
   const stats = useMemo(() => {
     const providers = new Set(credentials.map((c) => c.provider).filter(Boolean));
@@ -53,9 +55,19 @@ export function IbmExperience() {
     };
   }, [credentials]);
 
-  const summary =
-    graph?.summary ||
-    "Oracle Middleware Developer specializing in enterprise integrations — designing, building, and governing the connective tissue between mission-critical systems. Continuously credentialed across integration, cloud, and professional leadership disciplines.";
+  const skillCounts = useMemo(() => {
+    const counts = new Map();
+    credentials.forEach((c) => {
+      new Set(Array.isArray(c.skills) ? c.skills : []).forEach((s) =>
+        counts.set(s, (counts.get(s) || 0) + 1),
+      );
+    });
+    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [credentials]);
+
+  const profileHeadline = settings?.ibm_profile_headline || "Oracle Applications Operations: Integration Specialist";
+  const profileIntro = settings?.ibm_profile_intro || "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems.";
+  const values = settings?.ibm_values || "Clarity in complexity, ownership in delivery, and continuous learning through measurable outcomes.";
 
   return (
     <div className="ibm-theme min-h-screen">
@@ -113,25 +125,21 @@ export function IbmExperience() {
                   Darrius J. Davidson
                 </h1>
                 <p className="text-lg font-semibold text-primary md:text-xl">
-                  Oracle Applications Operations: Integration Specialist
+                  {profileHeadline}
                 </p>
               </div>
               <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-                {
-                  "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems. I focus on integration architecture, API management, and middleware that keeps complex enterprise platforms in sync, and I stay continuously credentialed across integration, cloud, and professional leadership disciplines."
-                }
+                {profileIntro}
               </p>
             </div>
           </div>
         </section>
 
-        {/* Professional summary */}
+        {/* Values and credential intelligence */}
         <section className="mt-14">
           <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Professional Summary
-            </h2>
-            <p className="text-sm text-muted-foreground">{summary}</p>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Values</h2>
+            <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">{values}</p>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat icon={Layers} value={stats.total} label="Credentials" />
@@ -141,17 +149,69 @@ export function IbmExperience() {
           </div>
         </section>
 
-        {/* Credentials explorer */}
-        <section className="mt-16">
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Digital Credentials
+        {/* Credential Intelligence */}
+        <section
+          id="credential-intelligence"
+          aria-labelledby="credential-intelligence-title"
+          className="mt-16 overflow-hidden rounded-2xl border border-border bg-card"
+        >
+          <div className="flex flex-col gap-2 border-b border-border bg-primary/5 px-6 py-6 md:px-8">
+            <span className="inline-flex w-fit items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary">
+              <BrainCircuit className="h-3.5 w-3.5" />
+              Credential Intelligence
+            </span>
+            <h2
+              id="credential-intelligence-title"
+              className="text-balance text-2xl font-bold tracking-tight text-foreground md:text-3xl"
+            >
+              Verified skills, credentials, and capability map
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Discovered and organized from Credly, IBM SkillsBuild, Oracle University,
-              Udemy, and Harvard Manage Mentor.
+            <p className="max-w-3xl text-pretty text-sm leading-relaxed text-muted-foreground">
+              Every credential uploaded in the dashboard feeds the skills index, the
+              credential wallet, and the AI skill graph below.
             </p>
           </div>
+
+          <div className="flex flex-col divide-y divide-border">
+            {/* Skills */}
+            <div className="flex flex-col gap-5 px-6 py-8 md:px-8">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">Skills</h3>
+                <p className="text-sm text-muted-foreground">
+                  Earned skills from your digital credentials, ranked by how many credentials support each one.
+                </p>
+              </div>
+              {skillCounts.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Add skills to each credential in the dashboard to populate this list.
+                </p>
+              ) : (
+                <ul className="flex flex-wrap gap-2">
+                  {skillCounts.map(([skill, count]) => (
+                    <li
+                      key={skill}
+                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background px-3 py-1.5 text-xs font-medium text-foreground"
+                    >
+                      {skill}
+                      <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                        {count}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Credential wallet */}
+            <div className="flex flex-col gap-5 px-6 py-8 md:px-8">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                  Credential Wallet
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Every certification uploaded in the dashboard, searchable and filterable.
+                </p>
+              </div>
 
           {isLoading ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -173,27 +233,34 @@ export function IbmExperience() {
           ) : (
             <CredentialsExplorer credentials={credentials} />
           )}
-        </section>
+            </div>
 
-        {/* AI Skill Graph */}
-        <section className="mt-16">
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              AI Skill Graph
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Automatically synthesized from every earned badge and certification.
-            </p>
+            {/* AI Skill Graph */}
+            <div className="flex flex-col gap-5 px-6 py-8 md:px-8">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                  AI Skill Graph
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Built from the skills attached to each digital credential.
+                </p>
+              </div>
+              <SkillGraph credentials={credentials} graph={graph} />
+            </div>
+
+            {/* Learning timeline */}
+            {credentials.length > 0 && (
+              <div className="px-6 py-8 md:px-8">
+                <LearningTimeline credentials={credentials} />
+              </div>
+            )}
           </div>
-          <SkillGraph credentials={credentials} graph={graph} />
         </section>
 
-        {/* Learning timeline */}
-        {credentials.length > 0 && (
-          <section className="mt-16">
-            <LearningTimeline credentials={credentials} />
-          </section>
-        )}
+        {/* Clients & Projects */}
+        <section className="mt-16">
+          <IbmProjects />
+        </section>
       </main>
 
       {/* Contact — "Let's work together" */}

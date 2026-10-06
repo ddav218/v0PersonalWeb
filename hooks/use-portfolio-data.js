@@ -9,7 +9,7 @@ const fetcher = (url) => fetch(url).then((r) => r.json());
 export function useProjects() {
   const { data, error, isLoading, mutate } = useSWR("/api/projects", fetcher);
 
-  const projects = data || [];
+  const projects = Array.isArray(data) ? data : [];
 
   const addProject = useCallback(
     async (project) => {
@@ -54,9 +54,13 @@ export function useProjects() {
 export function useSkills() {
   const { data, error, isLoading, mutate } = useSWR("/api/skills", fetcher);
 
-  const skills = data || {
-    programmingLanguages: [],
-    digitalMediaTools: [],
+  const skills = {
+    programmingLanguages: Array.isArray(data?.programmingLanguages)
+      ? data.programmingLanguages
+      : [],
+    digitalMediaTools: Array.isArray(data?.digitalMediaTools)
+      ? data.digitalMediaTools
+      : [],
   };
 
   const addSkill = useCallback(
@@ -102,7 +106,7 @@ export function useSkills() {
 export function useGraphics() {
   const { data, error, isLoading, mutate } = useSWR("/api/graphics", fetcher);
 
-  const graphics = data || [];
+  const graphics = Array.isArray(data) ? data : [];
 
   const addGraphic = useCallback(
     async (graphic) => {
