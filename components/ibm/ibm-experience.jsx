@@ -16,7 +16,6 @@ import {
 import { useCredentials, useSkillGraph, useSettings } from "@/hooks/use-portfolio-data";
 import { SkillGraph } from "./skill-graph";
 import { CredentialsExplorer } from "./credentials-explorer";
-import { LearningTimeline } from "./learning-timeline";
 import { IbmContact } from "./ibm-contact";
 import { IbmProjects } from "./ibm-projects";
 
@@ -247,13 +246,6 @@ export function IbmExperience() {
               </div>
               <SkillGraph credentials={credentials} graph={graph} />
             </div>
-
-            {/* Learning timeline */}
-            {credentials.length > 0 && (
-              <div className="px-6 py-8 md:px-8">
-                <LearningTimeline credentials={credentials} />
-              </div>
-            )}
           </div>
         </section>
 

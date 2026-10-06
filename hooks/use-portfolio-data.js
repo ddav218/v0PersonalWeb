@@ -50,6 +50,43 @@ export function useProjects() {
   return { projects, addProject, updateProject, removeProject, isLoading, error };
 }
 
+/* ===================== IBM CLIENTS & PROJECTS ===================== */
+export function useIbmProjects() {
+  const { data, error, isLoading, mutate } = useSWR("/api/ibm-projects", fetcher);
+
+  const ibmProjects = Array.isArray(data) ? data : [];
+
+  const send = useCallback(
+    async (method, body) => {
+      const res = await fetch("/api/ibm-projects", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Request failed");
+      await mutate();
+      return result;
+    },
+    [mutate]
+  );
+
+  const addIbmProject = useCallback((project) => send("POST", project), [send]);
+  const updateIbmProject = useCallback(
+    (id, project) => send("PUT", { id, ...project }),
+    [send]
+  );
+  const removeIbmProject = useCallback(
+    async (id) => {
+      await fetch(`/api/ibm-projects?id=${id}`, { method: "DELETE" });
+      await mutate();
+    },
+    [mutate]
+  );
+
+  return { ibmProjects, addIbmProject, updateIbmProject, removeIbmProject, isLoading, error };
+}
+
 /* ===================== SKILLS ===================== */
 export function useSkills() {
   const { data, error, isLoading, mutate } = useSWR("/api/skills", fetcher);
