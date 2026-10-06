@@ -55,6 +55,16 @@ export function IbmExperience() {
     };
   }, [credentials]);
 
+  const skillCounts = useMemo(() => {
+    const counts = new Map();
+    credentials.forEach((c) => {
+      new Set(Array.isArray(c.skills) ? c.skills : []).forEach((s) =>
+        counts.set(s, (counts.get(s) || 0) + 1),
+      );
+    });
+    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [credentials]);
+
   const profileHeadline = settings?.ibm_profile_headline || "Oracle Applications Operations: Integration Specialist";
   const profileIntro = settings?.ibm_profile_intro || "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems.";
   const values = settings?.ibm_values || "Clarity in complexity, ownership in delivery, and continuous learning through measurable outcomes.";
@@ -139,34 +149,69 @@ export function IbmExperience() {
           </div>
         </section>
 
-        {/* Skills earned from credentials */}
-        <section className="mt-16">
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Skills</h2>
-            <p className="text-sm text-muted-foreground">Skills are mapped directly from the earned digital credentials in the wallet.</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {Array.from(new Set(credentials.flatMap((credential) => Array.isArray(credential.skills) ? credential.skills : []))).map((skill) => <span key={skill} className="rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary">{skill}</span>)}
-          </div>
-        </section>
-
-        {/* Credential wallet */} 
-        <section className="mt-16">
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Credential Wallet</h2>
-            <p className="text-sm text-muted-foreground">A searchable record of every uploaded, discovered, and verified certification.</p>
-          </div>
-
-        {/* Credentials explorer */}
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Digital Credentials
+        {/* Credential Intelligence */}
+        <section
+          id="credential-intelligence"
+          aria-labelledby="credential-intelligence-title"
+          className="mt-16 overflow-hidden rounded-2xl border border-border bg-card"
+        >
+          <div className="flex flex-col gap-2 border-b border-border bg-primary/5 px-6 py-6 md:px-8">
+            <span className="inline-flex w-fit items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary">
+              <BrainCircuit className="h-3.5 w-3.5" />
+              Credential Intelligence
+            </span>
+            <h2
+              id="credential-intelligence-title"
+              className="text-balance text-2xl font-bold tracking-tight text-foreground md:text-3xl"
+            >
+              Verified skills, credentials, and capability map
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Discovered and organized from Credly, IBM SkillsBuild, Oracle University,
-              Udemy, and Harvard Manage Mentor.
+            <p className="max-w-3xl text-pretty text-sm leading-relaxed text-muted-foreground">
+              Every credential uploaded in the dashboard feeds the skills index, the
+              credential wallet, and the AI skill graph below.
             </p>
           </div>
+
+          <div className="flex flex-col divide-y divide-border">
+            {/* Skills */}
+            <div className="flex flex-col gap-5 px-6 py-8 md:px-8">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">Skills</h3>
+                <p className="text-sm text-muted-foreground">
+                  Earned skills from your digital credentials, ranked by how many credentials support each one.
+                </p>
+              </div>
+              {skillCounts.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Add skills to each credential in the dashboard to populate this list.
+                </p>
+              ) : (
+                <ul className="flex flex-wrap gap-2">
+                  {skillCounts.map(([skill, count]) => (
+                    <li
+                      key={skill}
+                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background px-3 py-1.5 text-xs font-medium text-foreground"
+                    >
+                      {skill}
+                      <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                        {count}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Credential wallet */}
+            <div className="flex flex-col gap-5 px-6 py-8 md:px-8">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                  Credential Wallet
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Every certification uploaded in the dashboard, searchable and filterable.
+                </p>
+              </div>
 
           {isLoading ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -188,32 +233,34 @@ export function IbmExperience() {
           ) : (
             <CredentialsExplorer credentials={credentials} />
           )}
-        </section>
+            </div>
 
-        {/* AI Skill Graph */}
-        <section className="mt-16">
-          <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              AI Skill Graph
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Automatically synthesized from every earned badge and certification.
-            </p>
+            {/* AI Skill Graph */}
+            <div className="flex flex-col gap-5 px-6 py-8 md:px-8">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                  AI Skill Graph
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Built from the skills attached to each digital credential.
+                </p>
+              </div>
+              <SkillGraph credentials={credentials} graph={graph} />
+            </div>
+
+            {/* Learning timeline */}
+            {credentials.length > 0 && (
+              <div className="px-6 py-8 md:px-8">
+                <LearningTimeline credentials={credentials} />
+              </div>
+            )}
           </div>
-          <SkillGraph credentials={credentials} graph={graph} />
         </section>
 
         {/* Clients & Projects */}
         <section className="mt-16">
           <IbmProjects />
         </section>
-
-        {/* Learning timeline */}
-        {credentials.length > 0 && (
-          <section className="mt-16">
-            <LearningTimeline credentials={credentials} />
-          </section>
-        )}
       </main>
 
       {/* Contact — "Let's work together" */}
