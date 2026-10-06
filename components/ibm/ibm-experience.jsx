@@ -13,11 +13,12 @@ import {
   Route,
   Workflow,
 } from "lucide-react";
-import { useCredentials, useSkillGraph } from "@/hooks/use-portfolio-data";
+import { useCredentials, useSkillGraph, useSettings } from "@/hooks/use-portfolio-data";
 import { SkillGraph } from "./skill-graph";
 import { CredentialsExplorer } from "./credentials-explorer";
 import { LearningTimeline } from "./learning-timeline";
 import { IbmContact } from "./ibm-contact";
+import { IbmProjects } from "./ibm-projects";
 
 function Stat({ icon: Icon, value, label }) {
   return (
@@ -36,6 +37,7 @@ function Stat({ icon: Icon, value, label }) {
 export function IbmExperience() {
   const { credentials, isLoading } = useCredentials();
   const { graph } = useSkillGraph();
+  const { settings } = useSettings();
 
   const stats = useMemo(() => {
     const providers = new Set(credentials.map((c) => c.provider).filter(Boolean));
@@ -53,9 +55,9 @@ export function IbmExperience() {
     };
   }, [credentials]);
 
-  const summary =
-    graph?.summary ||
-    "Oracle Middleware Developer specializing in enterprise integrations — designing, building, and governing the connective tissue between mission-critical systems. Continuously credentialed across integration, cloud, and professional leadership disciplines.";
+  const profileHeadline = settings?.ibm_profile_headline || "Oracle Applications Operations: Integration Specialist";
+  const profileIntro = settings?.ibm_profile_intro || "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems.";
+  const values = settings?.ibm_values || "Clarity in complexity, ownership in delivery, and continuous learning through measurable outcomes.";
 
   return (
     <div className="ibm-theme min-h-screen">
@@ -113,25 +115,21 @@ export function IbmExperience() {
                   Darrius J. Davidson
                 </h1>
                 <p className="text-lg font-semibold text-primary md:text-xl">
-                  Oracle Applications Operations: Integration Specialist
+                  {profileHeadline}
                 </p>
               </div>
               <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground">
-                {
-                  "I'm an Oracle Middleware Developer specializing in enterprise integrations — designing and building the connective tissue between mission-critical systems. I focus on integration architecture, API management, and middleware that keeps complex enterprise platforms in sync, and I stay continuously credentialed across integration, cloud, and professional leadership disciplines."
-                }
+                {profileIntro}
               </p>
             </div>
           </div>
         </section>
 
-        {/* Professional summary */}
+        {/* Values and credential intelligence */}
         <section className="mt-14">
           <div className="mb-6 flex flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Professional Summary
-            </h2>
-            <p className="text-sm text-muted-foreground">{summary}</p>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Values</h2>
+            <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">{values}</p>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat icon={Layers} value={stats.total} label="Credentials" />
@@ -141,8 +139,25 @@ export function IbmExperience() {
           </div>
         </section>
 
-        {/* Credentials explorer */}
+        {/* Skills earned from credentials */}
         <section className="mt-16">
+          <div className="mb-6 flex flex-col gap-1">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Skills</h2>
+            <p className="text-sm text-muted-foreground">Skills are mapped directly from the earned digital credentials in the wallet.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {Array.from(new Set(credentials.flatMap((credential) => Array.isArray(credential.skills) ? credential.skills : []))).map((skill) => <span key={skill} className="rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary">{skill}</span>)}
+          </div>
+        </section>
+
+        {/* Credential wallet */} 
+        <section className="mt-16">
+          <div className="mb-6 flex flex-col gap-1">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Credential Wallet</h2>
+            <p className="text-sm text-muted-foreground">A searchable record of every uploaded, discovered, and verified certification.</p>
+          </div>
+
+        {/* Credentials explorer */}
           <div className="mb-6 flex flex-col gap-1">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
               Digital Credentials
@@ -186,6 +201,11 @@ export function IbmExperience() {
             </p>
           </div>
           <SkillGraph credentials={credentials} graph={graph} />
+        </section>
+
+        {/* Clients & Projects */}
+        <section className="mt-16">
+          <IbmProjects />
         </section>
 
         {/* Learning timeline */}
